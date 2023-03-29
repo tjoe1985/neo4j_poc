@@ -23,7 +23,7 @@ func main() {
 		log.Println("Error from hello World: ", err)
 	}
 
-	log.Println("restuls: ", result)
+	log.Println("results: ", result)
 
 }
 
@@ -39,7 +39,7 @@ func helloWorld(ctx context.Context, uri, username, password string, db string) 
 
 	//make empty array of users
 	usrs := []User{}
-	log.Println("value of usrs: ", usrs)
+
 	_, err = session.ExecuteRead(ctx, func(transaction neo4j.ManagedTransaction) (any, error) {
 		result, err := transaction.Run(ctx,
 			"MATCH (n) RETURN n.email as email, n.firstName as name, n.lastName as lastname;",
@@ -53,8 +53,6 @@ func helloWorld(ctx context.Context, uri, username, password string, db string) 
 		for result.Next(ctx) {
 
 			record := result.Record()
-			// remove lob just for debugging
-			log.Println("keys: ", record.Keys)
 
 			Email, err := record.Get("email")
 			if !err {
@@ -73,9 +71,8 @@ func helloWorld(ctx context.Context, uri, username, password string, db string) 
 				FirstName: FirstName.(string),
 				LastName:  LastName.(string),
 			}
-			log.Println("value of s: ", s)
+
 			usrs = append(usrs, s)
-			log.Println("value of usrs: ", usrs)
 
 		}
 
